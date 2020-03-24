@@ -9,12 +9,16 @@ let states = ["uninfected", "infected", "recovered", "deceased"];
 let infectionRadius = 25.0;
 let minimalDistance = 35.0;
 let population = 1500;
-let maxSickCycles = 2000;
+let maxSickCycles = 3000;
 let maxX = .125;
 let maxY = .125;
 let damping = .75;
 let friction = .85;
 let gui = undefined;
+let infectionValues = new Array;
+let recoveryValues = new Array;
+let deceasedValues = new Array;
+let stateUpdaterId = undefined;
 
 function limit (value, threshold)
 {
@@ -135,7 +139,7 @@ function simulationStep ()
 		if (particles[i].state == states[INFECTED]) {
 			++particles[i].sickCycles;
 			let mortalityRate = .005;
-			let recoveryRate = .01;
+			let recoveryRate = .05;
 			let chance = 100.0*random (0.0, 1.0);
 			if (chance <= mortalityRate) {
 				particles[i].state = states[DECEASED];
@@ -156,6 +160,9 @@ function simulationStep ()
 
 function reset ()
 {
+	infectionValues = [];
+	recoveryValues = [];
+	deceasedValues = [];
 	particles = [];
 	let position = [.0, .0];
 	let velocity = [.0, .0];
@@ -178,14 +185,36 @@ let Statistics = function() {
 	this.infectedAbsolute = .0;
 	this.deceasedAbsolute = .0;
 	this.recoveredAbsolute = .0;
-	this.uninfected = 100.;
-	this.infected = .0;
-	this.deceased = .0;
-	this.recovered = .0;
 	this.resetSimulation = function() {
 		reset();
 	};
 };
+
+function stateUpdater ()
+{
+	let maxValues = 480;
+
+	if (infectionValues.length < maxValues) {
+		infectionValues.push (stats.infected);
+	} else {
+		infectionValues = infectionValues.splice (0, 1);
+		infectionValues.push (stats.infected);
+	}
+
+	if (recoveryValues.length < maxValues) {
+		recoveryValues.push (stats.recovered);
+	} else {
+		recoveryValues = recoveryValues.splice (0, 1);
+		recoveryValues.push (stats.recovered);
+	}
+
+	if (deceasedValues.length < maxValues) {
+		deceasedValues.push (stats.deceased);
+	} else {
+		deceasedValues = deceasedValues.splice (0, 1);
+		deceasedValues.push (stats.deceased);
+	}
+}
 
 function init()
 {
@@ -196,6 +225,7 @@ function init()
 	resize ();
 	window.addEventListener ("resize", resize, false);
 	window.addEventListener ("click", infect, false);
+	stateUpdaterId = window.setInterval (stateUpdater, 500);
 
 	stats = new Statistics;
 	gui = new dat.GUI ();
@@ -207,10 +237,6 @@ function init()
 		}
 	});
 	gui.add (stats, "socialDistancing", false);
-	gui.add (stats, "uninfected", .0, 100.).listen();
-	gui.add (stats, "infected", .0, 100.).listen();
-	gui.add (stats, "deceased", .0, 100.).listen();
-	gui.add (stats, "recovered", .0, 100.).listen();
 	gui.add (stats, "resetSimulation");
 
 	reset ();
@@ -283,36 +309,30 @@ function drawGraphPlot ()
 	let originX = x + gap;
 	let originY = y + h - gap;
 	let t = new Date();
-	value = 125.*(.5 + .5*Math.cos (t.getTime()/1000.));
 	ctx.moveTo (originX, originY);
-	for (let i = 1; i < 65; ++i) {
-		value = 125.*(.5 + .5*Math.cos (i/8. + t.getTime()/1000.));
-		value += 45.*(.5 + .5*Math.cos (i/1.2 + t.getTime()/1000.));
-		ctx.lineTo (originX + 75./10.*i, originY - value);
+	for (let i = 0; i < infectionValues.length; ++i) {
+		value = infectionValues[i] * (h - 2.*gap)*.01;
+		ctx.lineTo (originX + i, originY - value);
 	}
 	ctx.stroke ();
 
 	// graph - recovered
 	ctx.strokeStyle = "rgb(16, 220, 16)";
 	ctx.beginPath ();
-	value = 100.*(.5 + .5*Math.sin (t.getTime()/1000.));
-	ctx.moveTo (originX, originY - value);
-	for (let i = 1; i < 65; ++i) {
-		value = 100.*(.5 + .5*Math.sin (i/5. + t.getTime()/1000.));
-		value += 24.*(.5 + .5*Math.cos (i/2. + t.getTime()/1000.));
-		ctx.lineTo (originX + 75./10.*i, originY - value);
+	ctx.moveTo (originX, originY);
+	for (let i = 0; i < recoveryValues.length; ++i) {
+		value = recoveryValues[i] * (h - 2.*gap)*.01;
+		ctx.lineTo (originX + i, originY - value);
 	}
 	ctx.stroke ();
 
 	// graph - deceased
 	ctx.strokeStyle = "rgb(16, 16, 16)";
 	ctx.beginPath ();
-	value = 70.*(.5 + .5*Math.cos (t.getTime()/1000.));
-	ctx.moveTo (originX, originY - value);
-	for (let i = 1; i < 65; ++i) {
-		value = 70.*(.5 + .5*Math.cos (i/7.4 + t.getTime()/1000.));
-		value += 32.*(.5 + .5*Math.sin (i/3.2 + t.getTime()/1000.));
-		ctx.lineTo (originX + 75./10.*i, originY - value);
+	ctx.moveTo (originX, originY);
+	for (let i = 0; i < deceasedValues.length; ++i) {
+		value = deceasedValues[i] * (h - 2.*gap)*.01;
+		ctx.lineTo (originX + i, originY - value);
 	}
 	ctx.stroke ();
 }
