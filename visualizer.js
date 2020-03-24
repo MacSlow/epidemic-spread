@@ -8,7 +8,7 @@ let DECEASED = 3;
 let states = ["uninfected", "infected", "recovered", "deceased"];
 let infectionRadius = 25.0;
 let minimalDistance = 35.0;
-let population = 1500;
+let population = 1000;
 let maxSickCycles = 3000;
 let maxX = .125;
 let maxY = .125;
@@ -40,7 +40,7 @@ function Particle (position, velocity, acceleration, state)
 	this.state = state
 	this.color = "white";
 	this.sickCycles = 0;
-	this.radius = 1.0;
+	this.radius = 1.25;
 }
 
 Particle.prototype.update = function() {
@@ -248,7 +248,6 @@ function resize ()
 
 function infect (event)
 {
-	event.preventDefault ();
 	let clickPosition = {};
 	clickPosition.x = event.clientX;
 	clickPosition.y = event.clientY;
@@ -306,10 +305,9 @@ function drawGraphPlot ()
 	ctx.beginPath ();
 	let originX = x + gap;
 	let originY = y + h - gap;
-	let t = new Date();
 	ctx.moveTo (originX, originY);
 	for (let i = 0; i < infectionValues.length; ++i) {
-		value = infectionValues[i] * (h - 2.*gap)*.01;
+		let value = infectionValues[i] * (h - 2.*gap)*.01;
 		ctx.lineTo (originX + i, originY - value);
 	}
 	ctx.stroke ();
@@ -319,7 +317,7 @@ function drawGraphPlot ()
 	ctx.beginPath ();
 	ctx.moveTo (originX, originY);
 	for (let i = 0; i < recoveryValues.length; ++i) {
-		value = recoveryValues[i] * (h - 2.*gap)*.01;
+		let value = recoveryValues[i] * (h - 2.*gap)*.01;
 		ctx.lineTo (originX + i, originY - value);
 	}
 	ctx.stroke ();
@@ -329,7 +327,7 @@ function drawGraphPlot ()
 	ctx.beginPath ();
 	ctx.moveTo (originX, originY);
 	for (let i = 0; i < deceasedValues.length; ++i) {
-		value = deceasedValues[i] * (h - 2.*gap)*.01;
+		let value = deceasedValues[i] * (h - 2.*gap)*.01;
 		ctx.lineTo (originX + i, originY - value);
 	}
 	ctx.stroke ();
