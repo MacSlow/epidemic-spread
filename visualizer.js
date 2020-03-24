@@ -154,7 +154,6 @@ function simulationStep ()
 	}
 }
 
-
 function reset ()
 {
 	particles = [];
@@ -173,6 +172,7 @@ function reset ()
 }
 
 let Statistics = function() {
+	this.showInfo = true;
 	this.socialDistancing = false;
 	this.uninfectedAbsolute = population;
 	this.infectedAbsolute = .0;
@@ -199,6 +199,13 @@ function init()
 
 	stats = new Statistics;
 	gui = new dat.GUI ();
+	gui.add (stats, "showInfo", true).onChange (function (showInfo) {
+		if (showInfo) {
+			document.getElementById("legende").style.visibility = "visible";
+		} else {
+			document.getElementById("legende").style.visibility = "hidden";;
+		}
+	});
 	gui.add (stats, "socialDistancing", false);
 	gui.add (stats, "uninfected", .0, 100.).listen();
 	gui.add (stats, "infected", .0, 100.).listen();
@@ -325,7 +332,9 @@ function draw()
 		particles[i].draw ();
 	}
 
-	drawGraphPlot ();
+	if (stats.showInfo) {
+		drawGraphPlot ();
+	}
 }
 
 init ();
