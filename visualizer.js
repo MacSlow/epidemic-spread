@@ -259,6 +259,57 @@ function gatherStatistics ()
 	stats.deceased = stats.deceasedAbsolute/population*100;
 }
 
+function drawGraphPlot ()
+{
+	// background
+	ctx.fillStyle = "rgba(255, 255, 255, .65)";
+	let w = 500;
+	let h = 200;
+	let gap = 10;
+	let x = gap;
+	let y = canvas.height - h - gap;
+	ctx.fillRect (x, y, 500, 200);
+
+	// graph - infected
+	ctx.strokeStyle = "rgb(220, 16, 16)";
+	ctx.beginPath ();
+	let originX = x + gap;
+	let originY = y + h - gap;
+	let t = new Date();
+	value = 125.*(.5 + .5*Math.cos (t.getTime()/1000.));
+	ctx.moveTo (originX, originY);
+	for (let i = 1; i < 65; ++i) {
+		value = 125.*(.5 + .5*Math.cos (i/8. + t.getTime()/1000.));
+		value += 45.*(.5 + .5*Math.cos (i/1.2 + t.getTime()/1000.));
+		ctx.lineTo (originX + 75./10.*i, originY - value);
+	}
+	ctx.stroke ();
+
+	// graph - recovered
+	ctx.strokeStyle = "rgb(16, 220, 16)";
+	ctx.beginPath ();
+	value = 100.*(.5 + .5*Math.sin (t.getTime()/1000.));
+	ctx.moveTo (originX, originY - value);
+	for (let i = 1; i < 65; ++i) {
+		value = 100.*(.5 + .5*Math.sin (i/5. + t.getTime()/1000.));
+		value += 24.*(.5 + .5*Math.cos (i/2. + t.getTime()/1000.));
+		ctx.lineTo (originX + 75./10.*i, originY - value);
+	}
+	ctx.stroke ();
+
+	// graph - deceased
+	ctx.strokeStyle = "rgb(16, 16, 16)";
+	ctx.beginPath ();
+	value = 70.*(.5 + .5*Math.cos (t.getTime()/1000.));
+	ctx.moveTo (originX, originY - value);
+	for (let i = 1; i < 65; ++i) {
+		value = 70.*(.5 + .5*Math.cos (i/7.4 + t.getTime()/1000.));
+		value += 32.*(.5 + .5*Math.sin (i/3.2 + t.getTime()/1000.));
+		ctx.lineTo (originX + 75./10.*i, originY - value);
+	}
+	ctx.stroke ();
+}
+
 function draw()
 {
 	requestAnimationFrame (draw);
@@ -273,6 +324,8 @@ function draw()
 		particles[i].update ();
 		particles[i].draw ();
 	}
+
+	drawGraphPlot ();
 }
 
 init ();
