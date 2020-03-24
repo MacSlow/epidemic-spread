@@ -118,16 +118,14 @@ function simulationStep ()
 			if (i != j) {
 				let d = dist (particles[i], particles[j]);
 				if (d <= infectionRadius) {
+					let chanceOfInfection = 25.;
 					if (particles[i].state == states[INFECTED] &&
 						particles[j].state == states[UNINFECTED] ) {
-						particles[j].state = states[INFECTED];
-						++stats.infectedAbsolute;
-						--stats.uninfectedAbsolute;
-					} else if (particles[j].state == states[INFECTED] &&
-						       particles[i].state == states[UNINFECTED] ) {
-						particles[i].state = states[INFECTED];
-						++stats.infectedAbsolute;
-						--stats.uninfectedAbsolute;
+						if (chanceOfInfection > random (.0, 100.)) {
+							particles[j].state = states[INFECTED];
+							++stats.infectedAbsolute;
+							--stats.uninfectedAbsolute;
+						}
 					}
 				}
 			}
