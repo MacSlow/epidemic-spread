@@ -11,14 +11,14 @@
 		<script type = "text/javascript">
 			function onLoad ()
 			{
-				document.addEventListener ("mousedown", hideHelp);
+				document.addEventListener ("mouseup", hideHelp);
 				document.addEventListener ("touchstart", hideHelp);
 			}
 
             function hideHelp (event) {
                 let info = document.getElementById ("info");
                 info.style.display = "none";
-                document.removeEventListener ("mousedown", hideHelp);
+                document.removeEventListener ("mouseup", hideHelp);
                 document.removeEventListener ("touchstart", hideHelp);
             }
 		</script>
@@ -41,7 +41,7 @@
 		<div id = "info">
 			<p>Click on a particle/person to mark it as infected. This will start the spreading.</p>
 			<small>Any interaction will close this help-display.<br><br></small>
-			<small>contact: <a href src="mailto:macslow@gmail.com">macslow@gmail.com</a></small>
+			<small>contact: <a href="mailto:macslow@gmail.com">macslow@gmail.com</a>, code: <a href="https://github.com/MacSlow/epidemic-spread">git-repo</a></small>
 		</div>
 	</body>
 </html>
