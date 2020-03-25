@@ -8,7 +8,7 @@ let DECEASED = 3;
 let states = ["uninfected", "infected", "recovered", "deceased"];
 let infectionRadius = 25.0;
 let minimalDistance = 35.0;
-let population = 1000;
+let population = 1500;
 let maxSickCycles = 3000;
 let maxX = .125;
 let maxY = .125;
@@ -210,21 +210,21 @@ function stateUpdater ()
 	if (infectionValues.length < maxValues) {
 		infectionValues.push (stats.infected);
 	} else {
-		infectionValues = infectionValues.splice (0, 1);
+		infectionValues = infectionValues.splice (1, infectionValues.length - 1);
 		infectionValues.push (stats.infected);
 	}
 
 	if (recoveryValues.length < maxValues) {
 		recoveryValues.push (stats.recovered);
 	} else {
-		recoveryValues = recoveryValues.splice (0, 1);
+		recoveryValues = recoveryValues.splice (1, recoveryValues.length - 1);
 		recoveryValues.push (stats.recovered);
 	}
 
 	if (deceasedValues.length < maxValues) {
 		deceasedValues.push (stats.deceased);
 	} else {
-		deceasedValues = deceasedValues.splice (0, 1);
+		deceasedValues = deceasedValues.splice (1, deceasedValues.length - 1);
 		deceasedValues.push (stats.deceased);
 	}
 }
@@ -302,6 +302,24 @@ function gatherStatistics ()
 	stats.infected = stats.infectedAbsolute/population*100;
 	stats.recovered = stats.recoveredAbsolute/population*100;
 	stats.deceased = stats.deceasedAbsolute/population*100;
+
+	let string = "uninfected person - " + stats.uninfectedAbsolute.toString();
+	string += " (" + stats.uninfected.toFixed(1).toString() + "%)";
+	document.getElementById("uninfected").innerHTML = string;
+
+	string = "infected person - " + stats.infectedAbsolute.toString();
+	string += " (" + stats.infected.toFixed(1).toString() + "%)";
+	document.getElementById("infected").innerHTML = string;
+
+	string = "recovered person - " + stats.recoveredAbsolute.toString();
+	string += " (" + stats.recovered.toFixed(1).toString() + "%)";
+	document.getElementById("recovered").innerHTML = string;
+
+	document.getElementById("population").innerHTML = "initial population: " + population.toString();
+
+	string = "deceased persons: " + stats.deceasedAbsolute.toString();
+	string += " (" + stats.deceased.toFixed(1).toString() + "%)";
+	document.getElementById("deceased").innerHTML = string;
 }
 
 function drawGraphPlot ()
