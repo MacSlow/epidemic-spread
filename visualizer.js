@@ -162,6 +162,17 @@ function reset ()
 	recoveryValues = [];
 	deceasedValues = [];
 	particles = [];
+
+	stats.uninfectedAbsolute = population;
+	stats.infectedAbsolute = .0;
+	stats.deceasedAbsolute = .0;
+	stats.recoveredAbsolute = .0;
+
+	stats.uninfected = 100;
+	stats.infected = 0;
+	stats.deceased = 0;
+	stats.recovered = 0;
+
 	let position = [.0, .0];
 	let velocity = [.0, .0];
 	let acceleration = [.0, .0];
@@ -183,6 +194,10 @@ let Statistics = function() {
 	this.infectedAbsolute = .0;
 	this.deceasedAbsolute = .0;
 	this.recoveredAbsolute = .0;
+	this.uninfected = 100;
+	this.infected = 0;
+	this.deceased = 0;
+	this.recovered = 0;
 	this.resetSimulation = function() {
 		reset();
 	};
@@ -304,7 +319,7 @@ function drawGraphPlot ()
 	ctx.strokeStyle = "rgb(220, 16, 16)";
 	ctx.beginPath ();
 	let originX = x + gap;
-	let originY = y + h - gap;
+	let originY = y + h - gap - infectionValues[0] * (h - 2.*gap)*.01;
 	ctx.moveTo (originX, originY);
 	for (let i = 0; i < infectionValues.length; ++i) {
 		let value = infectionValues[i] * (h - 2.*gap)*.01;
@@ -315,6 +330,7 @@ function drawGraphPlot ()
 	// graph - recovered
 	ctx.strokeStyle = "rgb(16, 220, 16)";
 	ctx.beginPath ();
+	originY = y + h - gap - recoveryValues[0] * (h - 2.*gap)*.01;
 	ctx.moveTo (originX, originY);
 	for (let i = 0; i < recoveryValues.length; ++i) {
 		let value = recoveryValues[i] * (h - 2.*gap)*.01;
@@ -325,6 +341,7 @@ function drawGraphPlot ()
 	// graph - deceased
 	ctx.strokeStyle = "rgb(16, 16, 16)";
 	ctx.beginPath ();
+	originY = y + h - gap - deceasedValues[0] * (h - 2.*gap)*.01;
 	ctx.moveTo (originX, originY);
 	for (let i = 0; i < deceasedValues.length; ++i) {
 		let value = deceasedValues[i] * (h - 2.*gap)*.01;
