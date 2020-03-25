@@ -210,22 +210,22 @@ function stateUpdater ()
 	if (infectionValues.length < maxValues) {
 		infectionValues.push (stats.infected);
 	} else {
-		infectionValues = infectionValues.splice (1, infectionValues.length - 1);
-		infectionValues.push (stats.infected);
+		// infectionValues = infectionValues.splice (1, infectionValues.length - 1);
+		// infectionValues.push (stats.infected);
 	}
 
 	if (recoveryValues.length < maxValues) {
 		recoveryValues.push (stats.recovered);
 	} else {
-		recoveryValues = recoveryValues.splice (1, recoveryValues.length - 1);
-		recoveryValues.push (stats.recovered);
+		// recoveryValues = recoveryValues.splice (1, recoveryValues.length - 1);
+		// recoveryValues.push (stats.recovered);
 	}
 
 	if (deceasedValues.length < maxValues) {
 		deceasedValues.push (stats.deceased);
 	} else {
-		deceasedValues = deceasedValues.splice (1, deceasedValues.length - 1);
-		deceasedValues.push (stats.deceased);
+		// deceasedValues = deceasedValues.splice (1, deceasedValues.length - 1);
+		// deceasedValues.push (stats.deceased);
 	}
 }
 
