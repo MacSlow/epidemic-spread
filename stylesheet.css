@@ -49,3 +49,26 @@ html,body {
 #legende li:nth-child(3):before {
 	background: green;
 }
+
+#info {
+	position: absolute;
+	bottom: 10px;
+	right: 10px;
+	width: 620px;
+	height: 220px;
+	background-color: rgba(255, 255, 255, .65);
+}
+
+#info p {
+	padding-left: 20px;
+	padding-right: 20px;
+	font-family: Ubuntu;
+	font-size: 20pt;
+}
+
+#info small {
+	padding-left: 20px;
+	padding-right: 20px;
+	font-family: Ubuntu;
+	font-size: 14pt;
+}

@@ -231,7 +231,7 @@ function init()
 		if (showInfo) {
 			document.getElementById("legende").style.visibility = "visible";
 		} else {
-			document.getElementById("legende").style.visibility = "hidden";;
+			document.getElementById("legende").style.visibility = "hidden";
 		}
 	});
 	gui.add (stats, "socialDistancing", false);

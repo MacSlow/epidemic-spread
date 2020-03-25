@@ -8,9 +8,23 @@
 										   minimum-scale=1.0,
 										   maximum-scale=1.0">
         <link type = "text/css" rel = "stylesheet" href = "stylesheet.css">
+		<script type = "text/javascript">
+			function onLoad ()
+			{
+				document.addEventListener ("mousedown", hideHelp);
+				document.addEventListener ("touchstart", hideHelp);
+			}
+
+            function hideHelp (event) {
+                let info = document.getElementById ("info");
+                info.style.display = "none";
+                document.removeEventListener ("mousedown", hideHelp);
+                document.removeEventListener ("touchstart", hideHelp);
+            }
+		</script>
 	</head>
 
-	<body>
+	<body onload = "onLoad()" oncontextmenu = "return false;">
 		<canvas id = "canvas"></canvas>
 
 		<script type = "text/javascript" src = "dat.gui.min.js"></script>
@@ -22,6 +36,12 @@
 				<li>infected person</li>
 				<li>recovered person</li>
 			</ul>
+		</div>
+
+		<div id = "info">
+			<p>Click on a particle/person to mark it as infected. This will start the spreading.</p>
+			<small>Any interaction will close this help-display.<br><br></small>
+			<small>contact: <a href src="mailto:macslow@gmail.com">macslow@gmail.com</a></small>
 		</div>
 	</body>
 </html>
