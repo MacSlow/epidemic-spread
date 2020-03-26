@@ -19,6 +19,7 @@ let infectionValues = new Array;
 let recoveryValues = new Array;
 let deceasedValues = new Array;
 let stateUpdaterId = undefined;
+let disobey = 20;
 
 function limit (value, threshold)
 {
@@ -29,7 +30,7 @@ function limit (value, threshold)
 	}
 }
 
-function Particle (position, velocity, acceleration, state)
+function Particle (position, velocity, acceleration, state, obey)
 {
 	this.x = position[0];
 	this.y = position[1];
@@ -41,6 +42,7 @@ function Particle (position, velocity, acceleration, state)
 	this.color = "white";
 	this.sickCycles = 0;
 	this.radius = 1.25;
+	this.obey = obey;
 }
 
 Particle.prototype.update = function() {
@@ -180,16 +182,19 @@ function reset ()
 		position = [random (0.0, canvas.width), random(0.0, canvas.height)];
 		acceleration = [random (-.25, .25), random(-.25, .25)];
 		let i = Math.floor (random(0.0, 3.9));
+		let obey = random (0, 100) < stats.disobey ? false : true;
 		particles.push (new Particle (position,
 									  velocity,
 									  acceleration,
-									  states[UNINFECTED]));
+									  states[UNINFECTED],
+									  obey));
 	}
 }
 
 let Statistics = function() {
 	this.showInfo = true;
 	this.socialDistancing = false;
+	this.disobey = disobey;
 	this.uninfectedAbsolute = population;
 	this.infectedAbsolute = .0;
 	this.deceasedAbsolute = .0;
@@ -251,6 +256,7 @@ function init()
 	});
 	gui.add (stats, "socialDistancing", false);
 	gui.add (stats, "resetSimulation");
+	gui.add (stats, "disobey", 0, 100);
 
 	reset ();
 }
@@ -283,7 +289,7 @@ function enforceDistance ()
 		for (let j = 0; j < particles.length - 1; ++j) {
 			if (i != j && particles[j].state != states[DECEASED]) {
 				let d = dist (particles[i], particles[j]);
-				if (d <= minimalDistance) {
+				if (d <= minimalDistance && particles[i].obey) {
 					++amountInVicinity;
 					let deltaX = particles[i].x - particles[j].x;
 					let deltaY = particles[i].y - particles[j].y;
